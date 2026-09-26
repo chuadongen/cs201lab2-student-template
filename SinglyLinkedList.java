@@ -109,9 +109,11 @@ public class SinglyLinkedList<E extends Comparable<E>> {
         List<Node<E>> positionArrayList = new ArrayList<>(size);
         Map<Node<E>, Integer> positionHashMap = new HashMap<>();
         Node<E> current = head;
-        int idx = 0;
+        int index = 0;
         while (current != null) {
             positionArrayList.add(current);
+            positionHashMap.put(current, index);
+            index++;
             current = current.getNext();
         }
 
