@@ -101,8 +101,43 @@ public class SinglyLinkedList<E extends Comparable<E>> {
 
     // write your codes here
     public void swap(){
-        
+        if (size < 2) {
+            return;
+        }
 
+        // put nodes in arraylist and hashmap (to have o1 time for index lookup)
+        List<Node<E>> positionArrayList = new ArrayList<>(size);
+        Map<Node<E>, Integer> positionHashMap = new HashMap<>();
+        Node<E> current = head;
+        int idx = 0;
+        while (current != null) {
+            positionArrayList.add(current);
+            current = current.getNext();
+        }
+
+        // copy arraylist and sort
+        List<Node<E>> sortedArrayList = new ArrayList<>(positionArrayList);
+        sortedArrayList.sort((a, b) -> a.getElement().compareTo(b.getElement()));
+
+        // in positionArrayList, swap the pairs
+        for (int i = 0; i < size / 2; i++) {
+            Node<E> smallNode = sortedArrayList.get(i);
+            Node<E> largeNode = sortedArrayList.get(size - 1 - i);
+            int posSmall = positionHashMap.get(smallNode);
+            int posLarge = positionHashMap.get(largeNode);
+            Node<E> temp = positionArrayList.get(posSmall);
+            positionArrayList.set(posSmall, positionArrayList.get(posLarge));
+            positionArrayList.set(posLarge, temp);
+        }
+
+        // relink original LL
+        for (int i = 0; i < size - 1; i++) {
+            positionArrayList.get(i).setNext(positionArrayList.get(i + 1));
+        }
+        // set last to null
+        positionArrayList.get(size - 1).setNext(null);
+        head = positionArrayList.get(0);
+        tail = positionArrayList.get(size - 1);
     }
    
 }
